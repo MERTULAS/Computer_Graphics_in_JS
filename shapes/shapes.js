@@ -23,30 +23,26 @@ class Point {
 
 class Transform {
 
-    #rotation (deg) {
+    rotate (deg) {
         const rotatorMatrix = [
             [Math.cos(deg * DEG2RAD), Math.sin(deg * DEG2RAD)],
             [-Math.sin(deg * DEG2RAD), Math.cos(deg * DEG2RAD)]
         ]
-
         let rotatedMatrix;
-        let newPoints = {...this};
+
         let tempCenter = this.center.asArray;
-        
+        this.translate(-tempCenter[0], -tempCenter[1]);
+
+        let newPoints = {...this};
+
         Object.keys(newPoints).forEach(key => {
             rotatedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], rotatorMatrix)
             newPoints[key] = new Point(...rotatedMatrix[0]);
         });
+
         Object.assign(this, newPoints);
         this.translate(tempCenter[0], tempCenter[1]);
     } 
-
-    rotate (deg) {
-        let tempCenter = this.center.asArray;
-        this.translate(-tempCenter[0], -tempCenter[1]);
-        this.#rotation(deg)
-        this.translate(tempCenter[0], tempCenter[1]);
-    }
 
     translate (...shifts) {
         let newPoints = {...this};
@@ -54,6 +50,64 @@ class Transform {
             newPoints[key] = new Point(newPoints[key].x + shifts[0], newPoints[key].y + shifts[1]);
         });
         Object.assign(this, newPoints);
+    }
+
+    shearX (shifter) {
+        let shifterMatrix = [
+            [1, 0],
+            [shifter, 1]];
+
+        let shiftedMatrix;
+        let newPoints = {...this};
+
+        let tempCenter = this.center.asArray;
+
+        Object.keys(newPoints).forEach(key => {
+            shiftedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], shifterMatrix);
+            newPoints[key] = new Point(...shiftedMatrix[0]);
+        })
+        Object.assign(this, newPoints);
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
+        console.log(newPoints);
+    }
+
+    shearY (shifter) {
+        let shifterMatrix = [
+            [1, shifter],
+            [0, 1]];
+
+        let shiftedMatrix;
+        let newPoints = {...this};
+
+        let tempCenter = this.center.asArray;
+
+        Object.keys(newPoints).forEach(key => {
+            shiftedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], shifterMatrix);
+            newPoints[key] = new Point(...shiftedMatrix[0]);
+        })
+        Object.assign(this, newPoints);
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
+    }
+
+    shearXY (shifterX, shifterY) {
+        let shifterMatrix = [
+            [1, shifterY],
+            [shifterX, 1]];
+
+        let shiftedMatrix;
+        let newPoints = {...this};
+
+        let tempCenter = this.center.asArray;
+
+        Object.keys(newPoints).forEach(key => {
+            shiftedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], shifterMatrix);
+            newPoints[key] = new Point(...shiftedMatrix[0]);
+        })
+        Object.assign(this, newPoints);
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
     }
 
 }
