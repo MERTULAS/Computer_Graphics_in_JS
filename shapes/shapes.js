@@ -110,6 +110,26 @@ class Transform {
         this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
     }
 
+    scale (scalarMultiple) {
+        let multiplerMatrix = [
+            [0, scalarMultiple],
+            [scalarMultiple, 0]
+        ];
+
+        let scaledMatrix;
+        let newPoints = {...this};
+
+        let tempCenter = this.center.asArray;
+
+        Object.keys(newPoints).forEach(key => {
+            scaledMatrix = Matrix.dot([ Object.values(newPoints[key]) ], multiplerMatrix);
+            newPoints[key] = new Point(...scaledMatrix[0]);
+        })
+        Object.assign(this, newPoints);
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
+    }
+
 }
 
 
