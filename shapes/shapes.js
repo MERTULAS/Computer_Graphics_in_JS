@@ -132,8 +132,106 @@ class Transform {
 
 }
 
+class TransformPolyPoints extends Transform {
+    constructor () {
+        super();
+    }
 
-class Triangle extends Transform{
+    translate (...shifts) {
+        this.points.forEach((point, index) => {
+            this.points[index] = new Point(point.x + shifts[0], point.y + shifts[1]);
+        });
+    }
+
+    rotate (deg) {
+        const rotatorMatrix = [
+            [Math.cos(deg * DEG2RAD), Math.sin(deg * DEG2RAD)],
+            [-Math.sin(deg * DEG2RAD), Math.cos(deg * DEG2RAD)]
+        ]
+        let rotatedMatrix;
+
+        let tempCenter = this.center.asArray;
+        this.translate(-tempCenter[0], -tempCenter[1]);
+
+        this.points.forEach((point, index) => {
+            rotatedMatrix = Matrix.dot([ point.asArray ], rotatorMatrix);
+            this.points[index] = new Point(...rotatedMatrix[0]);
+        });
+
+        this.translate(...tempCenter);
+    }
+
+    shearX (shifter) {
+        let shifterMatrix = [
+            [1, 0],
+            [shifter, 1]];
+
+        let shiftedMatrix;
+
+        let tempCenter = this.center.asArray;
+        this.points.forEach((point, index) => {
+            shiftedMatrix = Matrix.dot([ point.asArray ], shifterMatrix);
+            this.points[index] = new Point(...shiftedMatrix[0]);
+        })
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
+    }
+
+    shearY (shifter) {
+        let shifterMatrix = [
+            [1, shifter],
+            [0, 1]];
+
+
+        let shiftedMatrix;
+
+        let tempCenter = this.center.asArray;
+        this.points.forEach((point, index) => {
+            shiftedMatrix = Matrix.dot([ point.asArray ], shifterMatrix);
+            this.points[index] = new Point(...shiftedMatrix[0]);
+        })
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
+    }
+
+    shearXY (shifterX, shifterY) {
+        let shifterMatrix = [
+            [1, shifterY],
+            [shifterX, 1]];
+
+
+        let shiftedMatrix;
+
+        let tempCenter = this.center.asArray;
+        this.points.forEach((point, index) => {
+            shiftedMatrix = Matrix.dot([ point.asArray ], shifterMatrix);
+            this.points[index] = new Point(...shiftedMatrix[0]);
+        })
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
+    }
+
+    scale (scalarMultiple) {
+        let multiplerMatrix = [
+            [scalarMultiple, 0],
+            [0, scalarMultiple]
+        ];
+
+        let scaledMatrix;
+
+        let tempCenter = this.center.asArray;
+        this.points.forEach((point, index) => {
+            scaledMatrix = Matrix.dot([ point.asArray ], multiplerMatrix);
+            this.points[index] = new Point(...scaledMatrix[0]);
+        })
+        let newCenter = this.center.asArray;
+        this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
+    }
+
+}
+
+
+class Triangle extends Transform {
 
     constructor(...args) {
         super();
@@ -219,7 +317,38 @@ class Rectangle extends Transform {
 }
 
 
+class Polygon extends TransformPolyPoints {
+    constructor (...points) {
+        super();
+        this.points = points.map(point => new Point(point[0], point[1]));
+    }
+
+    draw () {
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(...this.points[0].asArray);
+        this.points.forEach(point => {
+            ctx.lineTo(...point.asArray);
+        })
+        ctx.lineTo(...this.points[0].asArray);
+        ctx.stroke();
+    }
+
+    get center () {
+        let xCenter = 0;
+        let yCenter = 0;
+        this.points.forEach(point => {
+            xCenter += point.x;
+            yCenter += point.y;
+        })
+
+        return new Point(xCenter / this.points.length, yCenter / this.points.length);
+    }
+}
+
+
 export {
     Triangle,
-    Rectangle
+    Rectangle,
+    Polygon
 }
