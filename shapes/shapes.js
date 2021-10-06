@@ -112,8 +112,8 @@ class Transform {
 
     scale (scalarMultiple) {
         let multiplerMatrix = [
-            [0, scalarMultiple],
-            [scalarMultiple, 0]
+            [scalarMultiple, 0],
+            [0, scalarMultiple]
         ];
 
         let scaledMatrix;
