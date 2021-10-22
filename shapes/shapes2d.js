@@ -69,7 +69,6 @@ class Transform {
         Object.assign(this, newPoints);
         let newCenter = this.center.asArray;
         this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
-        console.log(newPoints);
     }
 
     shearY (shifter) {
@@ -325,6 +324,7 @@ class Polygon extends TransformPolyPoints {
 
     draw () {
         ctx.lineWidth = 6;
+        ctx.fillStyle = "#f11"
         ctx.beginPath();
         ctx.moveTo(...this.points[0].asArray);
         this.points.forEach(point => {
@@ -332,6 +332,7 @@ class Polygon extends TransformPolyPoints {
         })
         ctx.lineTo(...this.points[0].asArray);
         ctx.stroke();
+        ctx.fill();
     }
 
     get center () {
