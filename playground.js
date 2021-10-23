@@ -1,5 +1,5 @@
 import { Triangle, Rectangle, Polygon } from "./shapes/shapes2d.js";
-import { Matrix } from "./matrixJS/matrix.js";
+import { Vector } from "./VectorJS/vector.js";
 
 const canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth;
@@ -44,9 +44,9 @@ rect2.scale(1.5);
 
 
 polygon1.translate(50, 200);
-polygon1.rotate(60);
+polygon1.rotate(80);
 polygon1.scale(.9);
-//polygon1.draw();
+polygon1.draw();
 
 //rect2.rotate(30);
 //rect2.draw();

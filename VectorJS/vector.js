@@ -1,13 +1,11 @@
 const deg2Rad = Math.PI / 180;
 
-class Matrix {
+class Vector {
     constructor(matrix) {
         this.matrix = matrix;
     }
 
     static dot (firstMatrix, secondMatrix) {
-        // if (typeof(firstMatrix[0]) !== "object" || typeof(secondMatrix[0]) !== "object" ) 
-        //     throw "These matrices are not formed correctly.";
         let n = firstMatrix[0].length, m = firstMatrix.length, k = secondMatrix[0].length, l = secondMatrix.length;
         if (n !== l) 
             throw "These matrices have not available sizes for dot multiplication operation. Must be like these => [m x n] . [n x k]";
@@ -45,5 +43,5 @@ class Matrix {
 }
 
 export {
-    Matrix
+    Vector
 }

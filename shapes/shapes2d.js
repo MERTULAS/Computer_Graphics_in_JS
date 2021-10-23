@@ -1,4 +1,4 @@
-import { Matrix } from "../matrixJS/matrix.js";
+import { Vector } from "../VectorJS/vector.js";
 
 const DEG2RAD = Math.PI / 180;
 
@@ -36,7 +36,7 @@ class Transform {
         let newPoints = {...this};
 
         Object.keys(newPoints).forEach(key => {
-            rotatedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], rotatorMatrix)
+            rotatedMatrix = Vector.dot([ Object.values(newPoints[key]) ], rotatorMatrix)
             newPoints[key] = new Point(...rotatedMatrix[0]);
         });
 
@@ -63,7 +63,7 @@ class Transform {
         let tempCenter = this.center.asArray;
 
         Object.keys(newPoints).forEach(key => {
-            shiftedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], shifterMatrix);
+            shiftedMatrix = Vector.dot([ Object.values(newPoints[key]) ], shifterMatrix);
             newPoints[key] = new Point(...shiftedMatrix[0]);
         })
         Object.assign(this, newPoints);
@@ -82,7 +82,7 @@ class Transform {
         let tempCenter = this.center.asArray;
 
         Object.keys(newPoints).forEach(key => {
-            shiftedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], shifterMatrix);
+            shiftedMatrix = Vector.dot([ Object.values(newPoints[key]) ], shifterMatrix);
             newPoints[key] = new Point(...shiftedMatrix[0]);
         })
         Object.assign(this, newPoints);
@@ -101,7 +101,7 @@ class Transform {
         let tempCenter = this.center.asArray;
 
         Object.keys(newPoints).forEach(key => {
-            shiftedMatrix = Matrix.dot([ Object.values(newPoints[key]) ], shifterMatrix);
+            shiftedMatrix = Vector.dot([ Object.values(newPoints[key]) ], shifterMatrix);
             newPoints[key] = new Point(...shiftedMatrix[0]);
         })
         Object.assign(this, newPoints);
@@ -121,7 +121,7 @@ class Transform {
         let tempCenter = this.center.asArray;
 
         Object.keys(newPoints).forEach(key => {
-            scaledMatrix = Matrix.dot([ Object.values(newPoints[key]) ], multiplerMatrix);
+            scaledMatrix = Vector.dot([ Object.values(newPoints[key]) ], multiplerMatrix);
             newPoints[key] = new Point(...scaledMatrix[0]);
         })
         Object.assign(this, newPoints);
@@ -153,7 +153,7 @@ class TransformPolyPoints extends Transform {
         this.translate(-tempCenter[0], -tempCenter[1]);
 
         this.points.forEach((point, index) => {
-            rotatedMatrix = Matrix.dot([ point.asArray ], rotatorMatrix);
+            rotatedMatrix = Vector.dot([ point.asArray ], rotatorMatrix);
             this.points[index] = new Point(...rotatedMatrix[0]);
         });
 
@@ -169,7 +169,7 @@ class TransformPolyPoints extends Transform {
 
         let tempCenter = this.center.asArray;
         this.points.forEach((point, index) => {
-            shiftedMatrix = Matrix.dot([ point.asArray ], shifterMatrix);
+            shiftedMatrix = Vector.dot([ point.asArray ], shifterMatrix);
             this.points[index] = new Point(...shiftedMatrix[0]);
         })
         let newCenter = this.center.asArray;
@@ -186,7 +186,7 @@ class TransformPolyPoints extends Transform {
 
         let tempCenter = this.center.asArray;
         this.points.forEach((point, index) => {
-            shiftedMatrix = Matrix.dot([ point.asArray ], shifterMatrix);
+            shiftedMatrix = Vector.dot([ point.asArray ], shifterMatrix);
             this.points[index] = new Point(...shiftedMatrix[0]);
         })
         let newCenter = this.center.asArray;
@@ -203,7 +203,7 @@ class TransformPolyPoints extends Transform {
 
         let tempCenter = this.center.asArray;
         this.points.forEach((point, index) => {
-            shiftedMatrix = Matrix.dot([ point.asArray ], shifterMatrix);
+            shiftedMatrix = Vector.dot([ point.asArray ], shifterMatrix);
             this.points[index] = new Point(...shiftedMatrix[0]);
         })
         let newCenter = this.center.asArray;
@@ -220,7 +220,7 @@ class TransformPolyPoints extends Transform {
 
         let tempCenter = this.center.asArray;
         this.points.forEach((point, index) => {
-            scaledMatrix = Matrix.dot([ point.asArray ], multiplerMatrix);
+            scaledMatrix = Vector.dot([ point.asArray ], multiplerMatrix);
             this.points[index] = new Point(...scaledMatrix[0]);
         })
         let newCenter = this.center.asArray;
