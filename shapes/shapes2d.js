@@ -1,4 +1,5 @@
 import { Vector } from "../VectorJS/vector.js";
+import { Point } from "./point.js";
 
 const DEG2RAD = Math.PI / 180;
 
@@ -6,20 +7,6 @@ const canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext("2d");
-
-
-class Point {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-    
-    get asArray () {
-        return [this.x, this.y];
-    }
-    
-}
-
 
 class Transform {
 

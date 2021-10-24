@@ -1,4 +1,5 @@
 import { Triangle, Rectangle, Polygon } from "./shapes/shapes2d.js";
+import { Cube } from "./shapes/shapes3d.js";
 import { Vector } from "./VectorJS/vector.js";
 
 const canvas = document.getElementById("canvas");
@@ -47,6 +48,7 @@ polygon1.translate(50, 200);
 polygon1.rotate(80);
 polygon1.scale(.9);
 polygon1.draw();
+//rect1.draw();
 
 //rect2.rotate(30);
 //rect2.draw();
@@ -60,6 +62,9 @@ rect1.shearY(-Math.sin(30 * Math.PI / 180))
 let shears = [1, 0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75, -1];
 let i = 0;
 let inc = 1;
+
+
+// console.log(Vector.normalize([5, 12, 13]))
 
 function animate () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -83,7 +88,18 @@ function animate () {
     requestAnimationFrame(animate);
 }
 
+let cubePoints = [
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 5],
+    [5, 6],
+    [6, 7],
+    [7, 8],
+    [8, 9]];
 
+let cube1 = new Cube([6, 10, 0], 5);
+cube1.draw();
 
 
 // animate();

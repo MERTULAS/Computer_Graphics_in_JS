@@ -1,8 +1,12 @@
 const deg2Rad = Math.PI / 180;
 
 class Vector {
-    constructor(matrix) {
-        this.matrix = matrix;
+    constructor(vector) {
+        /*
+            vector => [x, y] (2D)
+            vector => [x, y, z] (3D)
+        */
+        this.vector = vector;
     }
 
     static dot (firstMatrix, secondMatrix) {
@@ -38,6 +42,15 @@ class Vector {
             point.y = newPoint[1]
         })
 
+    }
+
+    static normalize(vector) {
+        /*
+            vector => [x, y] (2D)
+            vector => [x, y, z] (3D)
+        */
+       let vectorMagnitude = vector.reduce((dim1, dim2) => Math.sqrt(dim1 * dim1 + dim2 * dim2));
+       return vector.map(dimension => dimension / vectorMagnitude);
     }
 
 }
