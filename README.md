@@ -1,2 +1,2 @@
 # computer-graphics-in-JS
-## under development
+## under development...
