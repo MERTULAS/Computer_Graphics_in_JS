@@ -64,6 +64,10 @@ let i = 0;
 let inc = 1;
 
 
+
+
+
+
 // console.log(Vector.normalize([5, 12, 13]))
 
 function animate () {
@@ -88,17 +92,7 @@ function animate () {
     requestAnimationFrame(animate);
 }
 
-let cubePoints = [
-    [1, 2],
-    [2, 3],
-    [3, 4],
-    [4, 5],
-    [5, 6],
-    [6, 7],
-    [7, 8],
-    [8, 9]];
-
-let cube1 = new Cube([6, 10, 0], 5);
+let cube1 = new Cube([700, 600, 500], 50);
 cube1.draw();
 
 
