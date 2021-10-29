@@ -8,28 +8,27 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext("2d");
 
+
 class Transform3D {
     projectionTo2D () {
         let projectorMatrix = [];
-
         let tempCenter = this.center.asArray;
-        this.translate3D(-tempCenter[0], -tempCenter[1], -tempCenter[2]);
-
         let projectionResult;
-        Object.keys(this.points).forEach(key => {
-            let z = 1 / (50 - this.points[key].z)
+
+        Object.keys(this._normalizedPoints).forEach(key => {
+            let z = 1 / (5 - this._normalizedPoints[key].z);
             projectorMatrix = [
                 [z, 0],
                 [0, z],
                 [0, 0]
             ];
-            projectionResult = Vector.dot([ this.points[key].asArray ], projectorMatrix);
-            this.projectedPoints[key] = new Point(projectionResult[0][0] * 125, projectionResult[0][1] * 125);
+            projectionResult = Vector.dot([ this._normalizedPoints[key].asArray ], projectorMatrix);
+            this.projectedPoints[key] = new Point(projectionResult[0][0], projectionResult[0][1]);
         });
 
-        this.translate3D(...tempCenter);
+        this.scale(this._scale);
         this.translate2D(tempCenter[0], tempCenter[1]);
-        console.log(this.projectedPoints);
+        
     } 
 
     translate3D (...shifts) {
@@ -47,12 +46,75 @@ class Transform3D {
     translate2D (...shifts) {
         let newPoints = {...this.projectedPoints};
         Object.keys(newPoints).forEach(key => {
-            newPoints[key] = new Point3D(
+            newPoints[key] = new Point(
                 newPoints[key].x + shifts[0], 
                 newPoints[key].y + shifts[1]
                 );
         }); 
         Object.assign(this.projectedPoints, newPoints);
+    }
+
+    rotateX (deg) {
+        let rotaterMatrix = [
+            [1, 0, 0],
+            [0, Math.cos(deg * DEG2RAD), Math.sin(deg * DEG2RAD)],
+            [0, -Math.sin(deg * DEG2RAD), Math.cos(deg * DEG2RAD)]
+        ]
+
+        let rotatedMatrix;
+        Object.keys(this._normalizedPoints).forEach(key => {
+            rotatedMatrix = Vector.dot([ this._normalizedPoints[key].asArray ], rotaterMatrix);
+            this._normalizedPoints[key] = new Point3D(...rotatedMatrix[0]);
+        })
+
+    }
+
+    rotateY (deg) {
+        let rotaterMatrix = [
+            [Math.cos(deg * DEG2RAD), 0, Math.sin(deg * DEG2RAD)],
+            [0, 1, 0],
+            [-Math.sin(deg * DEG2RAD), 0, Math.cos(deg * DEG2RAD)]
+        ]
+
+        let rotatedMatrix;
+        Object.keys(this._normalizedPoints).forEach(key => {
+            rotatedMatrix = Vector.dot([ this._normalizedPoints[key].asArray ], rotaterMatrix);
+            this._normalizedPoints[key] = new Point3D(...rotatedMatrix[0]);
+        })
+    }
+
+    rotateZ (deg) {
+        let rotaterMatrix = [
+            [Math.cos(deg * DEG2RAD), Math.sin(deg * DEG2RAD), 0],
+            [-Math.sin(deg * DEG2RAD), Math.cos(deg * DEG2RAD), 0],
+            [0, 0, 1],
+        ]
+
+        let rotatedMatrix;
+        Object.keys(this._normalizedPoints).forEach(key => {
+            rotatedMatrix = Vector.dot([ this._normalizedPoints[key].asArray ], rotaterMatrix);
+            this._normalizedPoints[key] = new Point3D(...rotatedMatrix[0]);
+        })
+    }
+
+    scale (scalarMultiple) {
+        let multiplerMatrix = [
+            [scalarMultiple, 0],
+            [0, scalarMultiple]
+        ];
+
+        let scaledMatrix;
+        Object.keys(this.projectedPoints).forEach(key =>{
+            scaledMatrix = Vector.dot([ this.projectedPoints[key].asArray ], multiplerMatrix);
+            this.projectedPoints[key] = new Point(...scaledMatrix[0])
+        });
+        
+    }
+
+    normalize () {
+        Object.keys(this.points).forEach(key => {
+            this._normalizedPoints[key] = new Point3D (...Vector.normalize(this.points[key].asArray))
+        })
     }
 
 }
@@ -68,63 +130,63 @@ class Cube extends Transform3D{
 
         cubeCenter => is must be 3 dimension vector. 
     */
-    constructor(cubeCenter, edgeWidth) {
+    constructor(cubeCenter, scale) {
         super();
-        this.cubeCenter = new Point3D(...cubeCenter);
-        this.perspectiveZ = 1;
+        this._scale = scale;
         this.points = {
             p1 : new Point3D(
-                cubeCenter[0] - (edgeWidth / 2),
-                cubeCenter[1] - (edgeWidth / 2),
-                cubeCenter[2] - (edgeWidth / 2)
+                cubeCenter[0] - (this._scale / 2),
+                cubeCenter[1] - (this._scale / 2),
+                cubeCenter[2] - (this._scale / 2)
                 ),
             p2 : new Point3D(
-                cubeCenter[0] + (edgeWidth / 2),
-                cubeCenter[1] - (edgeWidth / 2),
-                cubeCenter[2] - (edgeWidth / 2)
+                cubeCenter[0] + (this._scale / 2),
+                cubeCenter[1] - (this._scale / 2),
+                cubeCenter[2] - (this._scale / 2)
                 ),
             p3 : new Point3D(
-                cubeCenter[0] + (edgeWidth / 2),
-                cubeCenter[1] + (edgeWidth / 2),
-                cubeCenter[2] - (edgeWidth / 2)
+                cubeCenter[0] + (this._scale / 2),
+                cubeCenter[1] + (this._scale / 2),
+                cubeCenter[2] - (this._scale / 2)
                 ),
             p4 : new Point3D(
-                cubeCenter[0] - (edgeWidth / 2),
-                cubeCenter[1] + (edgeWidth / 2),
-                cubeCenter[2] - (edgeWidth / 2)
+                cubeCenter[0] - (this._scale / 2),
+                cubeCenter[1] + (this._scale / 2),
+                cubeCenter[2] - (this._scale / 2)
                 ),
             p5 : new Point3D(
-                cubeCenter[0] - (edgeWidth / 2),
-                cubeCenter[1] - (edgeWidth / 2),
-                cubeCenter[2] + (edgeWidth / 2)
+                cubeCenter[0] - (this._scale / 2),
+                cubeCenter[1] - (this._scale / 2),
+                cubeCenter[2] + (this._scale / 2)
                 ),
             p6 : new Point3D(
-                cubeCenter[0] + (edgeWidth / 2),
-                cubeCenter[1] - (edgeWidth / 2),
-                cubeCenter[2] + (edgeWidth / 2)
+                cubeCenter[0] + (this._scale / 2),
+                cubeCenter[1] - (this._scale / 2),
+                cubeCenter[2] + (this._scale / 2)
                 ),
             p7 : new Point3D(
-                cubeCenter[0] + (edgeWidth / 2),
-                cubeCenter[1] + (edgeWidth / 2),
-                cubeCenter[2] + (edgeWidth / 2)
+                cubeCenter[0] + (this._scale / 2),
+                cubeCenter[1] + (this._scale / 2),
+                cubeCenter[2] + (this._scale / 2)
                 ),
             p8 : new Point3D(
-                cubeCenter[0] - (edgeWidth / 2),
-                cubeCenter[1] + (edgeWidth / 2),
-                cubeCenter[2] + (edgeWidth / 2)
+                cubeCenter[0] - (this._scale / 2),
+                cubeCenter[1] + (this._scale / 2),
+                cubeCenter[2] + (this._scale / 2)
                 ),
         };
         this.projectedPoints = {};
-        Object.keys(this.points).forEach(point => {
-            this.projectedPoints[point] = new Point(this.points[point].x, this.points[point].y);
-        });
+        this.center = this.getCenter;
+        this._normalizedPoints = {};
+        this.translate3D(...this.center.asArray.map(point => -point));
+        this.normalize();
     }
 
     draw () {
         this.projectionTo2D();
         let projectedPointsAsArray = Object.values(this.projectedPoints);
-        console.log(projectedPointsAsArray);
         ctx.beginPath();
+        ctx.lineWidth = 3
         for (let i = 0; i < 4; i++) {
 
             ctx.moveTo(...projectedPointsAsArray[i].asArray);
@@ -140,11 +202,28 @@ class Cube extends Transform3D{
         ctx.stroke();
     }
 
-    get center () {
-        return this.cubeCenter;
+    get getCenter () {
+        let [xCenter, yCenter, zCenter] = [0, 0, 0];
+
+        Object.values(this.points).forEach(point => {
+            xCenter += point.x;
+            yCenter += point.y;
+            zCenter += point.z;
+        })
+
+        return new Point3D(xCenter / 8, yCenter / 8, zCenter / 8);
     }
 
+    get projectionCenter () {
+        let [xCenter, yCenter] = [0, 0];
 
+        Object.values(this.projectedPoints).forEach(point => {
+            xCenter += point.x;
+            yCenter += point.y;
+        })
+
+        return new Point(xCenter / 8, yCenter / 8);
+    }
 }
 
 

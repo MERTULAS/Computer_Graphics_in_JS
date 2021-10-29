@@ -325,6 +325,7 @@ class Polygon extends TransformPolyPoints {
     get center () {
         let xCenter = 0;
         let yCenter = 0;
+        
         this.points.forEach(point => {
             xCenter += point.x;
             yCenter += point.y;
