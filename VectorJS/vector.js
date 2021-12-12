@@ -49,8 +49,10 @@ class Vector {
             vector => [x, y] (2D)
             vector => [x, y, z] (3D)
         */
-       let vectorMagnitude = vector.reduce((dim1, dim2) => Math.sqrt(dim1 * dim1 + dim2 * dim2));
-       return vector.map(dimension => dimension / vectorMagnitude);
+        let vectorMagnitude = vector
+            .reduce((dim1, dim2) => Math.sqrt(dim1 * dim1 + dim2 * dim2));
+        return vector
+            .map(dimension => dimension / vectorMagnitude);
     }
 
 }

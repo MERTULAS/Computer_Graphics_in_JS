@@ -16,7 +16,7 @@ class Transform3D {
         let projectionResult;
 
         Object.keys(this._normalizedPoints).forEach(key => {
-            let z = 1 / (5 - this._normalizedPoints[key].z);
+            let z = 1 / (1.5 - this._normalizedPoints[key].z);
             projectorMatrix = [
                 [z, 0],
                 [0, z],
@@ -55,10 +55,13 @@ class Transform3D {
     }
 
     rotateX (deg) {
+        const rad = deg * DEG2RAD;
+        const [ cosVal, sinVal ] = [ Math.cos(rad), Math.sin(rad) ];
+
         let rotaterMatrix = [
             [1, 0, 0],
-            [0, Math.cos(deg * DEG2RAD), Math.sin(deg * DEG2RAD)],
-            [0, -Math.sin(deg * DEG2RAD), Math.cos(deg * DEG2RAD)]
+            [0, cosVal, sinVal],
+            [0, -sinVal, cosVal]
         ]
 
         let rotatedMatrix;
@@ -70,10 +73,13 @@ class Transform3D {
     }
 
     rotateY (deg) {
+        const rad = deg * DEG2RAD;
+        const [ cosVal, sinVal ] = [ Math.cos(rad), Math.sin(rad) ];
+
         let rotaterMatrix = [
-            [Math.cos(deg * DEG2RAD), 0, Math.sin(deg * DEG2RAD)],
+            [cosVal, 0, sinVal],
             [0, 1, 0],
-            [-Math.sin(deg * DEG2RAD), 0, Math.cos(deg * DEG2RAD)]
+            [-sinVal, 0, cosVal]
         ]
 
         let rotatedMatrix;
@@ -84,9 +90,12 @@ class Transform3D {
     }
 
     rotateZ (deg) {
+        const rad = deg * DEG2RAD;
+        const [ cosVal, sinVal ] = [ Math.cos(rad), Math.sin(rad) ];
+
         let rotaterMatrix = [
-            [Math.cos(deg * DEG2RAD), Math.sin(deg * DEG2RAD), 0],
-            [-Math.sin(deg * DEG2RAD), Math.cos(deg * DEG2RAD), 0],
+            [cosVal, sinVal, 0],
+            [-sinVal, cosVal, 0],
             [0, 0, 1],
         ]
 
@@ -185,20 +194,20 @@ class Cube extends Transform3D{
     draw () {
         this.projectionTo2D();
         let projectedPointsAsArray = Object.values(this.projectedPoints);
+        
         ctx.beginPath();
-        ctx.lineWidth = 3
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = "yellow";
         for (let i = 0; i < 4; i++) {
+                ctx.moveTo(...projectedPointsAsArray[i].asArray);
+                ctx.lineTo(...projectedPointsAsArray[(i + 1) % 4].asArray);
 
-            ctx.moveTo(...projectedPointsAsArray[i].asArray);
-            ctx.lineTo(...projectedPointsAsArray[(i + 1) % 4].asArray);  
-
-            ctx.moveTo(...projectedPointsAsArray[i + 4].asArray);
-            ctx.lineTo(...projectedPointsAsArray[((i + 1) % 4) + 4].asArray);
-
-            ctx.moveTo(...projectedPointsAsArray[i].asArray);
-            ctx.lineTo(...projectedPointsAsArray[i + 4].asArray);
+                ctx.moveTo(...projectedPointsAsArray[i + 4].asArray);
+                ctx.lineTo(...projectedPointsAsArray[((i + 1) % 4) + 4].asArray);
+            
+                ctx.moveTo(...projectedPointsAsArray[i].asArray);
+                ctx.lineTo(...projectedPointsAsArray[i + 4].asArray);
         }
-
         ctx.stroke();
     }
 
