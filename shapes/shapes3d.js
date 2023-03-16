@@ -3,12 +3,6 @@ import { Vector } from "./../VectorJS/vector.js"
 
 const DEG2RAD = Math.PI / 180;
 
-const canvas = document.getElementById("canvas");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const ctx = canvas.getContext("2d");
-
-
 class Transform3D {
     projectionTo2D () {
         let projectorMatrix = [];
@@ -195,20 +189,20 @@ class Cube extends Transform3D{
         this.projectionTo2D();
         let projectedPointsAsArray = Object.values(this.projectedPoints);
         
-        ctx.beginPath();
-        ctx.lineWidth = 8;
-        ctx.strokeStyle = "yellow";
+        window.__ctx.beginPath();
+        window.__ctx.lineWidth = 8;
+        window.__ctx.strokeStyle = "yellow";
         for (let i = 0; i < 4; i++) {
-                ctx.moveTo(...projectedPointsAsArray[i].asArray);
-                ctx.lineTo(...projectedPointsAsArray[(i + 1) % 4].asArray);
+                window.__ctx.moveTo(...projectedPointsAsArray[i].asArray);
+                window.__ctx.lineTo(...projectedPointsAsArray[(i + 1) % 4].asArray);
 
-                ctx.moveTo(...projectedPointsAsArray[i + 4].asArray);
-                ctx.lineTo(...projectedPointsAsArray[((i + 1) % 4) + 4].asArray);
+                window.__ctx.moveTo(...projectedPointsAsArray[i + 4].asArray);
+                window.__ctx.lineTo(...projectedPointsAsArray[((i + 1) % 4) + 4].asArray);
             
-                ctx.moveTo(...projectedPointsAsArray[i].asArray);
-                ctx.lineTo(...projectedPointsAsArray[i + 4].asArray);
+                window.__ctx.moveTo(...projectedPointsAsArray[i].asArray);
+                window.__ctx.lineTo(...projectedPointsAsArray[i + 4].asArray);
         }
-        ctx.stroke();
+        window.__ctx.stroke();
     }
 
     get getCenter () {

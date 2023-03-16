@@ -3,11 +3,6 @@ import { Point } from "./point.js";
 
 const DEG2RAD = Math.PI / 180;
 
-const canvas = document.getElementById("canvas");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const ctx = canvas.getContext("2d");
-
 class Transform {
 
     rotate (deg) {
@@ -234,15 +229,15 @@ class Triangle extends Transform {
     }
 
     draw () {
-        ctx.lineWidth = 6;
-        ctx.beginPath();
+        window.__ctx__.lineWidth = 6;
+        window.__ctx__.beginPath();
 
-        ctx.moveTo(...Object.values(this.p1));
-        ctx.lineTo(...Object.values(this.p2));
-        ctx.lineTo(...Object.values(this.p3));
-        ctx.lineTo(...Object.values(this.p1));
+        window.__ctx__.moveTo(...Object.values(this.p1));
+        window.__ctx__.lineTo(...Object.values(this.p2));
+        window.__ctx__.lineTo(...Object.values(this.p3));
+        window.__ctx__.lineTo(...Object.values(this.p1));
 
-        ctx.stroke();
+        window.__ctx__.stroke();
     }
 
     get center () {
@@ -276,16 +271,16 @@ class Rectangle extends Transform {
     }
 
     draw () {
-        ctx.lineWidth = 6;
-        ctx.beginPath();
+        window.__ctx__.lineWidth = 6;
+        window.__ctx__.beginPath();
 
-        ctx.moveTo(...Object.values(this.p1));
-        ctx.lineTo(...Object.values(this.p2));
-        ctx.lineTo(...Object.values(this.p4));
-        ctx.lineTo(...Object.values(this.p3));
-        ctx.lineTo(...Object.values(this.p1));
+        window.__ctx__.moveTo(...Object.values(this.p1));
+        window.__ctx__.lineTo(...Object.values(this.p2));
+        window.__ctx__.lineTo(...Object.values(this.p4));
+        window.__ctx__.lineTo(...Object.values(this.p3));
+        window.__ctx__.lineTo(...Object.values(this.p1));
 
-        ctx.stroke();
+        window.__ctx__.stroke();
     }
 
     get center () {
@@ -310,16 +305,16 @@ class Polygon extends TransformPolyPoints {
     }
 
     draw () {
-        ctx.lineWidth = 6;
-        ctx.fillStyle = "#f11"
-        ctx.beginPath();
-        ctx.moveTo(...this.points[0].asArray);
+        window.__ctx__.lineWidth = 6;
+        window.__ctx__.fillStyle = "#f11"
+        window.__ctx__.beginPath();
+        window.__ctx__.moveTo(...this.points[0].asArray);
         this.points.forEach(point => {
-            ctx.lineTo(...point.asArray);
+            window.__ctx__.lineTo(...point.asArray);
         })
-        ctx.lineTo(...this.points[0].asArray);
-        ctx.stroke();
-        ctx.fill();
+        window.__ctx__.lineTo(...this.points[0].asArray);
+        window.__ctx__.stroke();
+        window.__ctx__.fill();
     }
 
     get center () {

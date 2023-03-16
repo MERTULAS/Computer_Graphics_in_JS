@@ -1,14 +1,11 @@
+import { initCanvas } from "../canvas/canvas.js";
 import { Triangle, Rectangle, Polygon } from "./shapes/shapes2d.js";
 import { Cube } from "./shapes/shapes3d.js";
 import { Vector } from "./VectorJS/vector.js";
 
-const canvas = document.getElementById("canvas");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const ctx = canvas.getContext("2d");
+initCanvas("canvas1");
 
-
-let rect1 = new Rectangle(50, 50, 50, 50);
+let rect1 = new Rectangle(500, 500, 50, 50);
 let rect2 = new Rectangle(50, 350, 300, 100);
 let triangle1 = new Triangle(350, 300, 450, 50, 250, 200);
 let triangle2 = new Triangle(600, 500, 700, 200, 500, 600);
@@ -36,12 +33,11 @@ let polygon1 = new Polygon([300, 300], [400, 150], [400, 300], [350, 350], [300,
 //rect1.draw();
 
 rect2.translate(400, 0);
-rect1.translate(-50, -50);
 
 rect1.scale(1);
 rect2.scale(1.5);
 
-//rect2.draw();
+// rect2.draw();
 
 
 polygon1.translate(50, 200);
@@ -74,28 +70,12 @@ let cube1 = new Cube([700, 600, 10], 1000);
 
 
 function animate () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    i += inc;
-    if (i == 8) inc = -1 ;
-    if (i == 0) inc = 1;
-    //rect2.shearY(shears[i]);
-    triangle1.rotate(2);
-    rect2.rotate(-10);
-    triangle2.rotate(5);
-    triangle3.rotate(-5);
-    polygon1.rotate(10);
-    
-    //polygon1.draw();
-    //triangle3.draw();
-    //triangle2.draw();
-    //triangle1.draw();
-    //rect1.draw();
-    //cube1.rotateX(1);
-    cube1.rotateY(1);
-    //cube1.rotateZ(1);
-    cube1.draw();
-    rect1.translate(2, -2)
-    //rect2.draw();
+    window.__ctx__.clearRect(0, 0, window.__canvas__.width, window.__canvas__.height);
+    rect1.draw();
+    polygon1.draw();
+    rect1.rotate(10);
+    polygon1.rotate(-1);
+
 
     requestAnimationFrame(animate);
 }
