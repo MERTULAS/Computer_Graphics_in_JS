@@ -189,20 +189,20 @@ class Cube extends Transform3D{
         this.projectionTo2D();
         let projectedPointsAsArray = Object.values(this.projectedPoints);
         
-        window.__ctx.beginPath();
-        window.__ctx.lineWidth = 8;
-        window.__ctx.strokeStyle = "yellow";
+        window.__ctx__.beginPath();
+        window.__ctx__.lineWidth = 8;
+        window.__ctx__.strokeStyle = "yellow";
         for (let i = 0; i < 4; i++) {
-                window.__ctx.moveTo(...projectedPointsAsArray[i].asArray);
-                window.__ctx.lineTo(...projectedPointsAsArray[(i + 1) % 4].asArray);
+                window.__ctx__.moveTo(...projectedPointsAsArray[i].asArray);
+                window.__ctx__.lineTo(...projectedPointsAsArray[(i + 1) % 4].asArray);
 
-                window.__ctx.moveTo(...projectedPointsAsArray[i + 4].asArray);
-                window.__ctx.lineTo(...projectedPointsAsArray[((i + 1) % 4) + 4].asArray);
+                window.__ctx__.moveTo(...projectedPointsAsArray[i + 4].asArray);
+                window.__ctx__.lineTo(...projectedPointsAsArray[((i + 1) % 4) + 4].asArray);
             
-                window.__ctx.moveTo(...projectedPointsAsArray[i].asArray);
-                window.__ctx.lineTo(...projectedPointsAsArray[i + 4].asArray);
+                window.__ctx__.moveTo(...projectedPointsAsArray[i].asArray);
+                window.__ctx__.lineTo(...projectedPointsAsArray[i + 4].asArray);
         }
-        window.__ctx.stroke();
+        window.__ctx__.stroke();
     }
 
     get getCenter () {
