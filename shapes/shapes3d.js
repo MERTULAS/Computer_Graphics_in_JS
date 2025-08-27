@@ -190,8 +190,6 @@ class Cube extends Transform3D{
         let projectedPointsAsArray = Object.values(this.projectedPoints);
         
         window.__ctx__.beginPath();
-        window.__ctx__.lineWidth = 8;
-        window.__ctx__.strokeStyle = "yellow";
         for (let i = 0; i < 4; i++) {
                 window.__ctx__.moveTo(...projectedPointsAsArray[i].asArray);
                 window.__ctx__.lineTo(...projectedPointsAsArray[(i + 1) % 4].asArray);
