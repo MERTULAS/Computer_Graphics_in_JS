@@ -1,12 +1,16 @@
 import { Vector } from "../VectorJS/vector.js";
-import { Point } from "./point.js";
+import { Point, Pixel } from "./point.js";
 
 const DEG2RAD = Math.PI / 180;
 
 class Transform {
     translate(...shifts) {
         this.points.forEach((point, index) => {
-            this.points[index] = new Point(point.x + shifts[0], point.y + shifts[1]);
+            if (point instanceof Pixel) {
+                this.points[index] = new Pixel(point.x + shifts[0], point.y + shifts[1], point.r, point.g, point.b, point.a);
+            } else {
+                this.points[index] = new Point(point.x + shifts[0], point.y + shifts[1]);
+            }
         });
     }
 
@@ -22,7 +26,11 @@ class Transform {
 
         this.points.forEach((point, index) => {
             rotatedMatrix = Vector.dot([point.asArray], rotatorMatrix);
-            this.points[index] = new Point(...rotatedMatrix[0]);
+            if (point instanceof Pixel) {
+                this.points[index] = new Pixel(...rotatedMatrix[0], point.r, point.g, point.b, point.a);
+            } else {
+                this.points[index] = new Point(...rotatedMatrix[0]);
+            }
         });
 
         this.translate(...tempCenter);
@@ -38,7 +46,11 @@ class Transform {
         let tempCenter = this.center.asArray;
         this.points.forEach((point, index) => {
             shiftedMatrix = Vector.dot([point.asArray], shifterMatrix);
-            this.points[index] = new Point(...shiftedMatrix[0]);
+            if (point instanceof Pixel) {
+                this.points[index] = new Pixel(...shiftedMatrix[0], point.r, point.g, point.b, point.a);
+            } else {
+                this.points[index] = new Point(...shiftedMatrix[0]);
+            }
         })
         let newCenter = this.center.asArray;
         this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
@@ -55,7 +67,11 @@ class Transform {
         let tempCenter = this.center.asArray;
         this.points.forEach((point, index) => {
             shiftedMatrix = Vector.dot([point.asArray], shifterMatrix);
-            this.points[index] = new Point(...shiftedMatrix[0]);
+            if (point instanceof Pixel) {
+                this.points[index] = new Pixel(...shiftedMatrix[0], point.r, point.g, point.b, point.a);
+            } else {
+                this.points[index] = new Point(...shiftedMatrix[0]);
+            }
         })
         let newCenter = this.center.asArray;
         this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
@@ -72,7 +88,11 @@ class Transform {
         let tempCenter = this.center.asArray;
         this.points.forEach((point, index) => {
             shiftedMatrix = Vector.dot([point.asArray], shifterMatrix);
-            this.points[index] = new Point(...shiftedMatrix[0]);
+            if (point instanceof Pixel) {
+                this.points[index] = new Pixel(...shiftedMatrix[0], point.r, point.g, point.b, point.a);
+            } else {
+                this.points[index] = new Point(...shiftedMatrix[0]);
+            }
         })
         let newCenter = this.center.asArray;
         this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
@@ -87,9 +107,14 @@ class Transform {
         let scaledMatrix;
 
         let tempCenter = this.center.asArray;
+
         this.points.forEach((point, index) => {
             scaledMatrix = Vector.dot([point.asArray], multiplerMatrix);
-            this.points[index] = new Point(...scaledMatrix[0]);
+            if (point instanceof Pixel) {
+                this.points[index] = new Pixel(...scaledMatrix[0], point.r, point.g, point.b, point.a);
+            } else {
+                this.points[index] = new Point(...scaledMatrix[0]);
+            }
         })
         let newCenter = this.center.asArray;
         this.translate(-(newCenter[0] - tempCenter[0]), -(newCenter[1] - tempCenter[1]));
@@ -129,7 +154,7 @@ class Polygon extends Transform {
             xCenter += point.x;
             yCenter += point.y;
         })
-
+        
         return new Point(xCenter / this.points.length, yCenter / this.points.length);
     }
 }
@@ -154,8 +179,54 @@ class Rectangle extends Polygon {
     }
 }
 
+class ImageShape extends Transform {
+    constructor(x, y, imageData, w, h) {
+        super();
+        this.w = w;
+        this.h = h;
+        this.points = []; // [Pixel]
+        for (let j = 0; j < h; ++j) {
+            for (let i = 0; i < w; ++i) {
+                this.points.push(new Pixel(
+                    x + i,
+                    y + j,
+                    imageData[j * w * 4 + i * 4],
+                    imageData[j * w * 4 + i * 4 + 1],
+                    imageData[j * w * 4 + i * 4 + 2],
+                    imageData[j * w * 4 + i * 4 + 3]
+                )
+                );
+            }
+        }
+    }
+
+    draw() {
+        this.points.forEach(pixel => {
+            window.__ctx__.fillStyle = `rgba(${pixel.r}, ${pixel.g}, ${pixel.b}, ${pixel.a})`;
+            window.__ctx__.fillRect(pixel.x, pixel.y, 1, 1);
+        });
+    }
+
+    get center() {
+        let minX = Infinity;
+        let minY = Infinity;
+        let maxX = -Infinity;
+        let maxY = -Infinity;
+
+        this.points.forEach(pixel => {
+            minX = Math.min(minX, pixel.x);
+            minY = Math.min(minY, pixel.y);
+            maxX = Math.max(maxX, pixel.x);
+            maxY = Math.max(maxY, pixel.y);
+        });
+
+        return new Point((minX + maxX) / 2, (minY + maxY) / 2);
+    }
+}
+
 export {
     Triangle,
     Rectangle,
-    Polygon
+    Polygon,
+    ImageShape
 }

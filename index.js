@@ -1,5 +1,5 @@
 import { initCanvas } from "./canvas/canvas.js";
-import { Triangle, Rectangle, Polygon } from "./shapes/shapes2d.js";
+import { Triangle, Rectangle, Polygon, ImageShape } from "./shapes/shapes2d.js";
 import { Cube } from "./shapes/shapes3d.js";
 
 initCanvas("canvas1", window.innerWidth, window.innerHeight);
@@ -31,6 +31,45 @@ polygon1.scale(.9);
 
 const cube1 = new Cube([700, 600, 10], 1000);
 
+const image = new Image();
+image.crossOrigin = "anonymous";
+image.src = "./assets/img.jpg";
+
+image.onload = () => {
+  const ctx = window.__ctx__;
+  const w = image.naturalWidth;
+  const h = image.naturalHeight;
+
+  ctx.drawImage(image, 0, 0, w, h);
+
+  const imageData = ctx.getImageData(0, 0, w, h);
+  const pixels = imageData.data;
+
+  const imageShape = new ImageShape(0, 0, imageData.data, w, h);
+  imageShape.translate(200, 200);
+  imageShape.rotate(10);
+  imageShape.rotate(20);
+  imageShape.rotate(45);
+
+  imageShape.draw();
+
+  let i = 0;
+  const animate = () => {
+    window.__ctx__.clearRect(0, 0, window.__canvas__.width, window.__canvas__.height);
+    //imageShape.rotate(i);
+    i += 0.01;
+    //imageShape.shearX(Math.sin(i));
+    //imageShape.shearY(Math.cos(i));
+
+    imageShape.translate(Math.sin(i), Math.cos(i));
+    imageShape.draw();
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // ctx.putImageData(imageData, 0, 0);
+};
+
 function animate () {
     window.__ctx__.clearRect(0, 0, window.__canvas__.width, window.__canvas__.height);
     rect1.draw();
@@ -47,7 +86,7 @@ function animate () {
     requestAnimationFrame(animate);
 }
 
-animate();
+// animate();
 
 addEventListener("keydown", (e) => {
     if (e.key === "ArrowUp") {
