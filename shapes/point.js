@@ -21,7 +21,18 @@ class Point3D extends Point {
     }
 }
 
+class Pixel extends Point {
+    constructor(x, y, r, g, b, a) {
+        super(x, y);
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+};
+
 export {
     Point,
-    Point3D
+    Point3D,
+    Pixel
 }
