@@ -1,8 +1,19 @@
 {
   "name": "computer-graphics",
   "version": "0.2.0",
-  "description": "",
-  "main": "index.js",
+  "description": "CPU-based computer graphics playground for JS: 2D/3D transforms, ImageData, simple projection.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
@@ -10,10 +21,25 @@
   },
   "keywords": [
     "computer-graphics",
-    "javascript"
+    "javascript",
+    "2d",
+    "3d",
+    "transforms",
+    "projection"
   ],
   "author": "Mert Ulas",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MERTULAS/Computer_Graphics_in_JS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MERTULAS/Computer_Graphics_in_JS/issues"
+  },
+  "homepage": "https://github.com/MERTULAS/Computer_Graphics_in_JS#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "lil-gui": "^0.20.0",
     "vite": "^6.3.5"
