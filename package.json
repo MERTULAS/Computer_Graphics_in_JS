@@ -1,6 +1,6 @@
 {
   "name": "computer-graphics",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "CPU-based computer graphics playground for JS: 2D/3D transforms, ImageData, simple projection.",
   "type": "module",
   "main": "./lib/index.js",
