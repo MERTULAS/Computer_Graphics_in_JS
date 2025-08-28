@@ -1,6 +1,6 @@
 # Computer Graphics in JS (Canvas, CPU-Based)
 
-## Demo GIFs (English)
+## Demo GIFs
 
 ### 1) 3D Box: wireframe rotation with simple projection
 ![3D Box Rotation](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2VkNGF0ZDd5dmkyemExZjM4NHpudzZpcnBhZ2p4Nmw2MWpnbzdkMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TeGPVT1zqusqfMLJgr/giphy.gif)
