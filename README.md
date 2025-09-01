@@ -35,7 +35,7 @@ This project aims to demonstrate matrices, vectors, transformations (translate/r
   - `Transform3D` and `Box` (wireframe cube)
   - A simple perspective approach and 2D projection (minimal teaching pipeline)
 - Canvas bootstrap (`canvas/canvas.js`)
-  - A single canvas/context exposed as `window.__canvas__`, `window.__ctx__`
+  - Returns `{ canvas, ctx, dpr, clearCanvas, resize }` and also sets `window.__canvas__`, `window.__ctx__` for convenience
 - Vector/Matrix helpers (`VectorJS/vector.js`)
   - `dot` (matrix multiplication), `normalize`, 2D rotation helpers
 
@@ -53,16 +53,15 @@ Vite is used only for development (devDependency). A production-ready `dist/` bu
 The snippet below adds a rectangle and a polygon to the scene and applies basic transforms:
 
 ```javascript
-import { initCanvas } from "./canvas/canvas.js";
-import { Rectangle, Polygon } from "./shapes/shapes2d.js";
+import { initCanvas, Rectangle, Polygon } from "computer-graphics";
 
-initCanvas("canvas1", window.innerWidth, window.innerHeight);
+const { clearCanvas } = initCanvas("canvas1", window.innerWidth, window.innerHeight);
 
 const rect = new Rectangle(100, 100, 120, 80);
 const poly = new Polygon([300, 300], [360, 220], [420, 320], [340, 360]);
 
 function animate() {
-  window.__ctx__.clearRect(0, 0, window.__canvas__.width, window.__canvas__.height);
+  clearCanvas();
   rect.rotate(1);
   poly.shearX(Math.sin(0.01));
   rect.draw();
@@ -80,12 +79,16 @@ animate();
 - `ImageShape` converts pixels into `Pixel` objects and paints them with 1×1 `fillRect`s.
 
 ```javascript
+import { initCanvas, ImageShape } from "computer-graphics";
+
+const { ctx } = initCanvas("canvas1", window.innerWidth, window.innerHeight);
+
 const image = new Image();
 image.src = "./assets/img.jpg";
 image.onload = () => {
   const w = image.naturalWidth, h = image.naturalHeight;
-  window.__ctx__.drawImage(image, 0, 0, w, h);
-  const { data } = window.__ctx__.getImageData(0, 0, w, h);
+  ctx.drawImage(image, 0, 0, w, h);
+  const { data } = ctx.getImageData(0, 0, w, h);
   const img = new ImageShape(0, 0, data, w, h);
   img.translate(200, 200);
   img.rotate(37);
@@ -102,10 +105,13 @@ Note: If you want to use alpha in the 0–1 range, divide by 255 (`a/255`).
 - Camera model/focal length and related parameters can be extended later.
 
 ```javascript
-import { Box } from "./shapes/shapes3d.js";
+import { initCanvas, Box } from "computer-graphics";
+
+const { clearCanvas } = initCanvas("canvas1", window.innerWidth, window.innerHeight);
 const box = new Box([500, 500, 1.5], 500);
+
 function animate() {
-  window.__ctx__.clearRect(0, 0, window.__canvas__.width, window.__canvas__.height);
+  clearCanvas();
   box.rotateY(1);
   box.draw();
   requestAnimationFrame(animate);
@@ -118,7 +124,7 @@ animate();
 - As long as transforms are affine, a shape’s centroid moves linearly; center handling matters.
 - For GUI slider inputs, prefer “absolute” semantics (e.g., scale relative to the original, not cumulatively per frame).
 - If canvas CSS size differs from its real resolution, you might see blur; consider `devicePixelRatio`.
-- A global `ctx` keeps things simple; later we can pass it explicitly for better encapsulation/testing.
+- We return `ctx` and also expose a global for convenience; prefer passing `ctx` explicitly for encapsulation/testing.
 
 ## Roadmap
 
