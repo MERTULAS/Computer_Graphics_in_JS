@@ -1,78 +1,107 @@
-import { Box, initCanvas, Rectangle, Polygon, Triangle, ImageShape, Pixel, Point3D, Vector, Matrix } from "./lib/index.js";
+import { Box, initCanvas, Rectangle, Polygon, Triangle, ImageShape, Pixel, Point3D, Vector, Matrix, Group, Camera, Renderer } from "./lib/index.js";
 
-const { ctx, clearCanvas } = initCanvas("canvas1");
+const { ctx, clearCanvas, canvas } = initCanvas("canvas1");
 
 ctx.fillStyle = "black";
 ctx.strokeStyle = "white";
 ctx.lineWidth = 4;
 
-const rect1 = new Rectangle(600, 500, 50, 50);
-const rect1copy = new Rectangle(600, 500, 50, 50);
+// const rect1 = new Rectangle(600, 500, 50, 50);
+// const rect1copy = new Rectangle(600, 500, 50, 50);
 
-const rect2 = new Rectangle(50, 350, 300, 100);
-const triangle1 = new Triangle([350, 300], [450, 50], [250, 200]);
-const triangle2 = new Triangle([600, 500], [700, 200], [500, 600]);
-const triangle3 = new Triangle([600, 500], [700, 200], [500, 600]);
-const polygon1 = new Polygon([300, 300], [400, 150], [400, 300], [350, 350], [300, 400], [250, 200]);
+// const rect2 = new Rectangle(50, 350, 300, 100);
+// const triangle1 = new Triangle([350, 300], [450, 50], [250, 200]);
+// const triangle2 = new Triangle([600, 500], [700, 200], [500, 600]);
+// const triangle3 = new Triangle([600, 500], [700, 200], [500, 600]);
+// const polygon1 = new Polygon([300, 300], [400, 150], [400, 300], [350, 350], [300, 400], [250, 200]);
+
+// const group1 = new Group(rect1, rect1copy, rect2, triangle1, triangle2, triangle3, polygon1);
+
+// const tetrisRect1 = new Rectangle(100, 100, 50, 50);
+// const tetrisRect2 = new Rectangle(150, 100, 50, 50);
+// const tetrisRect3 = new Rectangle(200, 100, 50, 50);
+// const tetrisRect4 = new Rectangle(250, 100, 50, 50);
 
 
-const image = new Image();
-image.crossOrigin = "anonymous";
-image.src = "./assets/road.png";
+// const tetrisRect5 = new Rectangle(100, 100, 50, 50);
+// const tetrisRect6 = new Rectangle(150, 100, 50, 50);
+// const tetrisRect7 = new Rectangle(200, 100, 50, 50);
+// const tetrisRect8 = new Rectangle(150, 50, 50, 50);
 
-const box1 = new Box([350, 300, 0], 100);
+// const group2 = new Group(tetrisRect1, tetrisRect2, tetrisRect3, tetrisRect4);
+// const group3 = new Group(tetrisRect5, tetrisRect6, tetrisRect7, tetrisRect8);
 
-image.onload = () => {
-  const w = image.naturalWidth;
-  const h = image.naturalHeight;
+// group3.translate(100, 100);
 
-  ctx.drawImage(image, 100, 100, w, h);
+//const CENTER_X = window.__canvas__.width / 2;
+//const CENTER_Y = window.__canvas__.height / 2;
+//const CENTER_POINT = new Point3D(CENTER_X, CENTER_Y, 0);
 
-  const imageData = ctx.getImageData(100, 100, w, h);
-  const imageDataCopy = ctx.getImageData(100, 100, w, h);
+const camera = new Camera(0, 0, 0); // const camera = new Camera(new Point3D(0, 0, 500));
 
-  const imageShape = new ImageShape(0, 0, imageData.data, w, h);
-  const imageShapeCopy = new ImageShape(0, 0, imageDataCopy.data, w, h);
-  imageShape.translate(350, 100);
-  imageShapeCopy.translate(350, 370);
-  imageShape.scale(-1, 1);
+const renderer = new Renderer(canvas, camera);
 
-  imageShape.shearX(2);
-  imageShapeCopy.shearXY(-.1, .1);
-  imageShapeCopy.rotate(-32);
-    imageShapeCopy.scale(-1.1, -1.1);
+const box1 = new Box(200);
+const box2 = new Box(100);
 
-  box1.rotateX(1);
-  box1.draw();
-  imageShape.draw();
+renderer.addObject(box1);
+renderer.addObject(box2);
 
-  const animate = () => {
-    clearCanvas();
-    
-    imageShape.rotate(1);
-    box1.rotateX(1);
-    box1.rotateY(-1);
-    box1.rotateZ(-2);
-    imageShape.draw();
-    imageShapeCopy.draw();
-    box1.draw();
+//box1.translate3D(300, 300, 0);
+//box2.translate3D(300, 300, 0);
 
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  addEventListener("keydown", (e) => {
+addEventListener("keydown", (e) => {
+    if (e.key === "w") {
+        box1.translate3D(0, -10, 0);
+    }
+    if (e.key === "s") {
+        box1.translate3D(0, 10, 0);
+    }
+    if (e.key === "a") {
+        box1.translate3D(-10, 0, 0);
+    }
+    if (e.key === "d") {
+        box1.translate3D(10, 0, 0);
+    }
     if (e.key === "ArrowUp") {
-        imageShape.translate(0, 10);
+        box1.scale(1.1);
+        console.log(box1.points);
     }
     if (e.key === "ArrowDown") {
-        imageShape.translate(0, -10);
+        box1.scale(0.9);
+        console.log(box1.points);
     }
-    if (e.key === "ArrowLeft") {
-        imageShape.translate(10, 0);
+    if (e.key === "q") {
+        box1.rotateX(10);
+        console.log(box1.points);
     }
-    if (e.key === "ArrowRight") {
-        imageShape.translate(-10, 0);
+    if (e.key === "e") {
+        box1.rotateY(10);
+        console.log(box1.points);
+    }
+    if (e.key === "z") {
+        box1.wireframeType = "edges";
+    }
+    if (e.key === "x") {
+        box1.wireframeType = "triangles";
     }
 });
-};
+
+const animate = () => {
+    clearCanvas();
+    
+    box1.rotateX(-.5);
+    box1.rotateY(-.5);
+    box1.rotateZ(-.5);
+    
+    box2.rotateX(.5);
+    box2.rotateY(.5);
+    box2.rotateZ(.5);
+
+    renderer.showFPS();
+    renderer.render();
+
+    requestAnimationFrame(animate);
+}
+
+animate();
