@@ -1,6 +1,6 @@
-import { Box, initCanvas, Rectangle, Polygon, Triangle, ImageShape, Pixel, Point3D, Vector, Matrix, Group, Camera } from "./lib/index.js";
+import { Box, initCanvas, Rectangle, Polygon, Triangle, ImageShape, Pixel, Point3D, Vector, Matrix, Group, Camera, Renderer } from "./lib/index.js";
 
-const { ctx, clearCanvas } = initCanvas("canvas1");
+const { ctx, clearCanvas, canvas } = initCanvas("canvas1");
 
 ctx.fillStyle = "black";
 ctx.strokeStyle = "white";
@@ -33,15 +33,22 @@ ctx.lineWidth = 4;
 
 // group3.translate(100, 100);
 
-const vec = new Vector();
+//const CENTER_X = window.__canvas__.width / 2;
+//const CENTER_Y = window.__canvas__.height / 2;
+//const CENTER_POINT = new Point3D(CENTER_X, CENTER_Y, 0);
 
-console.log(Vector.normalize([1, 1, 1]));
+const camera = new Camera(0, 0, 0); // const camera = new Camera(new Point3D(0, 0, 500));
 
+const renderer = new Renderer(canvas, camera);
 
 const box1 = new Box(200);
 const box2 = new Box(100);
-box1.translate3D(300, 300, 0);
-box2.translate3D(300, 300, 0);
+
+renderer.addObject(box1);
+renderer.addObject(box2);
+
+//box1.translate3D(300, 300, 0);
+//box2.translate3D(300, 300, 0);
 
 addEventListener("keydown", (e) => {
     if (e.key === "w") {
@@ -90,10 +97,11 @@ const animate = () => {
     box2.rotateX(.5);
     box2.rotateY(.5);
     box2.rotateZ(.5);
-    
-    box1.draw();
-    box2.draw();
+
+    renderer.showFPS();
+    renderer.render();
 
     requestAnimationFrame(animate);
-  }
-  animate();
+}
+
+animate();
