@@ -1,4 +1,4 @@
-import { Box, initCanvas, Rectangle, Polygon, Triangle, ImageShape, Pixel, Point3D, Vector, Matrix, Group, Camera, Renderer } from "./lib/index.js";
+import { Box, initCanvas, Rectangle, Polygon, Triangle, ImageShape, Pixel, Point3D, Vector, Matrix, Group, Camera, Renderer } from "./lib";
 
 const { ctx, clearCanvas, canvas } = initCanvas("canvas1");
 
@@ -89,14 +89,14 @@ addEventListener("keydown", (e) => {
 
 const animate = () => {
     clearCanvas();
-    
-    box1.rotateX(-.5);
-    box1.rotateY(-.5);
-    box1.rotateZ(-.5);
-    
-    box2.rotateX(.5);
-    box2.rotateY(.5);
-    box2.rotateZ(.5);
+
+    // box1.rotateX(-.5);
+    // box1.rotateY(-.5);
+    // box1.rotateZ(-.5);
+
+    // box2.rotateX(.5);
+    // box2.rotateY(.5);
+    // box2.rotateZ(.5);
 
     renderer.showFPS();
     renderer.render();
